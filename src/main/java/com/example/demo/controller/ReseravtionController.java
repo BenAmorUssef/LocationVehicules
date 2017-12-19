@@ -1,24 +1,33 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.model.Client;
 import com.example.demo.model.Reservation;
 import com.example.demo.repository.ReservationRepository;
 import com.example.demo.service.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 
 @RestController
 @RequestMapping("/reservation")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ReseravtionController {
 
     private ReservationRepository reservationRepository;
     @Autowired
     private CounterService counterScervice;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     public ReseravtionController(ReservationRepository adminRepository) {
         super();
@@ -46,6 +55,26 @@ public class ReseravtionController {
     public List<Reservation> getAllbv(@PathVariable("id") String id){
         List<Reservation> reservations = this.reservationRepository.findAllByVehicule_Matricule(id);
         return reservations;
+    }
+
+
+    @GetMapping("/max")
+    public List<Client> getAllbvss(){
+
+        GroupOperation sumClient = group("client")
+                .sum("_id").as("numClt");
+        SortOperation sortSumClient = sort(new Sort(Sort.Direction.DESC, "numClt"));
+        LimitOperation limitToOnlyFirstDoc = limit(5);
+
+
+        Aggregation aggregation = newAggregation(
+                sumClient, sortSumClient,
+                limitToOnlyFirstDoc);
+
+        AggregationResults<Client> result = mongoTemplate
+                .aggregate(aggregation, "sum", Client.class);
+        List<Client> clients = result.getMappedResults();
+        return clients;
     }
 
     @PutMapping

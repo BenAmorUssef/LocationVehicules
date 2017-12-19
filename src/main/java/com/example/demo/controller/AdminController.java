@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class AdminController {
 
     private AdminRepository administrateurRepository;

@@ -79,13 +79,13 @@ public class Seeder implements CommandLineRunner{
 
         Reservation rev1 = new Reservation( 0, startDate, "en cours", "sfax", new Date(), "aucun commentaire", 4, aliCl, v1 );
         Reservation rev11 = new Reservation( 2, startDate, "en cours", "sfax", new Date(), "aucun commentaire", 4, aliCl, v1 );
-        Reservation rev2 = new Reservation( 3, startDate, "en cours", "tunis", new Date(), "aucun commentaire", 2, ahmedCl, v2);
+        Reservation rev2 = new Reservation( 3, startDate, "en cours", "tunis", new Date(), "aucun commentaire", 2, ahmedCl, v4);
         Reservation rev22 = new Reservation( 4, startDate, "en cours", "tunis", new Date(), "aucun commentaire", 2, ahmedCl, v2);
         Reservation rev3 = new Reservation( 5, startDate, "en cours", "sousse", new Date(), "aucun commentaire", 4, medCl, v3);
         Reservation rev33 = new Reservation( 1, startDate, "en cours", "sousse", new Date(), "aucun commentaire", 4, medCl, v3);
-        Reservation rev4 = new Reservation( 6, startDate, "en cours", "nabeul", new Date(), "aucun commentaire", 2, salahCl, v4);
-        Reservation rev44 = new Reservation( 7, startDate, "en cours", "nabeul", new Date(), "aucun commentaire", 2, salahCl, v4);
-        Reservation rev5 = new Reservation( 8, startDate, "en cours", "tatouine", new Date(), "aucun commentaire", 4, mounaCl, v5);
+        Reservation rev4 = new Reservation( 6, startDate, "en cours", "nabeul", new Date(), "aucun commentaire", 2, medCl, v4);
+        Reservation rev44 = new Reservation( 7, startDate, "en cours", "nabeul", new Date(), "aucun commentaire", 2, medCl, v4);
+        Reservation rev5 = new Reservation( 8, startDate, "en cours", "tatouine", new Date(), "aucun commentaire", 4, mounaCl, v4);
         Reservation rev55 = new Reservation( 9, startDate, "en cours", "tatouine", new Date(), "aucun commentaire", 4, mounaCl, v5);
 
         Administrateur ali = new Administrateur( 0, "Ali", "nabeul", "ali@email.com", "manager", aliC, Arrays.asList(rev1, rev11, rev22, rev2) );

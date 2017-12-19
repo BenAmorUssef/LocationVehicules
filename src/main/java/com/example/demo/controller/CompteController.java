@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/compte")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class CompteController {
 
     private CompteRepository compteRepository;
