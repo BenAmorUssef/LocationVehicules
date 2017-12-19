@@ -22,6 +22,7 @@ public class Seeder implements CommandLineRunner{
     private ReservationRepository reservationRepository;
     private VehiculeRepository vehiculeRepository;
     private TypeVehiculeRepository typeVehiculeRepository;
+    private CountersRepository countersRepository;
 
     public Seeder(
             AdminRepository adminRepository,
@@ -30,7 +31,7 @@ public class Seeder implements CommandLineRunner{
             LocaliteRepository localiteRepository,
             ReservationRepository reservationRepository,
             VehiculeRepository vehiculeRepository,
-            TypeVehiculeRepository typeVehiculeRepository) {
+            TypeVehiculeRepository typeVehiculeRepository, CountersRepository countersRepository) {
         this.adminRepository = adminRepository;
         this.clientRepository = clientRepository;
         this.compteRepository = compteRepository;
@@ -38,15 +39,16 @@ public class Seeder implements CommandLineRunner{
         this.reservationRepository = reservationRepository;
         this.vehiculeRepository = vehiculeRepository;
         this.typeVehiculeRepository = typeVehiculeRepository;
+        this.countersRepository = countersRepository;
     }
 
     @Override
     public void run(String... strings) throws Exception {
 
         Compte aliC = new Compte( 0, "Ali", "nabeul");
-        Compte medC = new Compte( 2, "med", "ariana");
-        Compte salahC = new Compte( 3, "salah", "sousse");
-        Compte mounaC = new Compte( 4, "mouna", "sfax");
+        Compte medC = new Compte( 1, "med", "ariana");
+        Compte salahC = new Compte( 2, "salah", "sousse");
+        Compte mounaC = new Compte( 3, "mouna", "sfax");
 
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         Date startDate = null;
@@ -62,17 +64,17 @@ public class Seeder implements CommandLineRunner{
         Client mounaCl = new Client( 4, "mouna", "sfax", "20202020", "ali@email.com");
 
         Localite nabeul = new Localite( 0, "nabeul");
-        Localite ariana = new Localite( 2,  "ariana");
-        Localite sousse = new Localite( 3,  "sousse");
-        Localite sfax = new Localite( 4,  "sfax");
+        Localite ariana = new Localite( 1,  "ariana");
+        Localite sousse = new Localite( 2,  "sousse");
+        Localite sfax = new Localite( 3,  "sfax");
 
         TypeVehicule tv = new TypeVehicule(0, "voiture", 0.0f);
 
-        Vehicule v1 = new Vehicule("veh-1", "peugeaut", "4CH", 0,tv , nabeul );
-        Vehicule v2 = new Vehicule("veh-2", "mazerrati", "5CH", 4, tv,  sousse);
-        Vehicule v3 = new Vehicule("veh-3", "ferrari", "5CH", 0, tv,  nabeul);
-        Vehicule v4 = new Vehicule("veh-4", "mybash", "5CH", 4, tv,  sfax);
-        Vehicule v5 = new Vehicule("veh-5", "mazerrati", "5CH", 4, tv,  ariana);
+        Vehicule v1 = new Vehicule("1", "peugeaut", "4CH", 0,tv , nabeul );
+        Vehicule v2 = new Vehicule("2", "mazerrati", "5CH", 4, tv,  sousse);
+        Vehicule v3 = new Vehicule("3", "ferrari", "5CH", 0, tv,  nabeul);
+        Vehicule v4 = new Vehicule("4", "mybash", "5CH", 4, tv,  sfax);
+        Vehicule v5 = new Vehicule("0", "mazerrati", "5CH", 4, tv,  ariana);
 
 
         Reservation rev1 = new Reservation( 0, startDate, "en cours", "sfax", new Date(), "aucun commentaire", 4, aliCl, v1 );
@@ -91,6 +93,14 @@ public class Seeder implements CommandLineRunner{
         Administrateur med = new Administrateur( 2, "med", "ariana", "ali@email.com", "manager", medC, Arrays.asList(rev4, rev11, rev5, rev55));
         Administrateur mouna = new Administrateur( 3, "mouna", "sousse", "mouna@email.com", "manager", mounaC, Arrays.asList(rev3, rev55, rev4,rev33,rev44, rev5));
 
+        Counter cAdmin = new Counter("admin", 4);
+        Counter cClient = new Counter("client", 4);
+        Counter cLocalite = new Counter("localite", 3);
+        Counter cReservation = new Counter("reservation", 9);
+        Counter cType = new Counter("type", 0);
+        Counter cVehiculle = new Counter("vehicule", 4);
+        Counter cCompte = new Counter("compte", 4);
+
         this.adminRepository.deleteAll();
         this.clientRepository.deleteAll();
         this.compteRepository.deleteAll();
@@ -98,8 +108,9 @@ public class Seeder implements CommandLineRunner{
         this.vehiculeRepository.deleteAll();
         this.typeVehiculeRepository.deleteAll();
         this.reservationRepository.deleteAll();
-        //add our hotels to the database
+        this.countersRepository.deleteAll();
 
+        this.countersRepository.save(Arrays.asList(cAdmin, cClient, cCompte, cLocalite, cReservation, cType, cVehiculle));
         this.clientRepository.save(Arrays.asList(aliCl, salahCl, medCl, ahmedCl, mounaCl));
         this.compteRepository.save(Arrays.asList(aliC, medC, salahC, mounaC));
         this.localiteRepository.save(Arrays.asList(nabeul, ariana, sousse, sfax ));

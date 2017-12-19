@@ -3,9 +3,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Vehicule;
 import com.example.demo.repository.VehiculeRepository;
+import com.example.demo.service.CounterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
@@ -13,6 +17,8 @@ import java.util.List;
 public class VehiculeController {
 
     private VehiculeRepository vehiculeRepository;
+    @Autowired
+    private CounterService counterScervice;
 
     public VehiculeController(VehiculeRepository adminRepository) {
         super();
@@ -23,6 +29,13 @@ public class VehiculeController {
     public List<Vehicule> getAll(){
         List<Vehicule> vehicules = this.vehiculeRepository.findAll();
         return vehicules;
+    }
+
+    @CrossOrigin
+    @GetMapping("/{id}")
+    public Vehicule getWithId(@PathVariable("id") int id){
+        Vehicule vehicule = this.vehiculeRepository.findOne(id+"");
+        return vehicule;
     }
 
     @GetMapping("/all/localite/{id}")
@@ -38,18 +51,53 @@ public class VehiculeController {
     }
 
     @PutMapping
-    public void insert(@RequestBody Vehicule vehicule) {
-        this.vehiculeRepository.insert(vehicule);
+    public Map<String, Object> insert(@RequestBody Vehicule vehicule) {
+        Vehicule vehicule1 = new Vehicule();
+        vehicule1.setMatricule(counterScervice.getNextSequence("vehicule")+"");
+        vehicule1.setLocalite(vehicule.getLocalite());
+        vehicule1.setMarqueVeh(vehicule.getMarqueVeh());
+        vehicule1.setNombrePlace(vehicule.getNombrePlace());
+        vehicule1.setPuissanceVeh(vehicule.getPuissanceVeh());
+        vehicule1.setTypeVehicule(vehicule.getTypeVehicule());
+        Map<String, Object> response = new LinkedHashMap<String, Object>();
+        try {
+            response.put("status", "true");
+            response.put("object", this.vehiculeRepository.insert(vehicule1));
+            response.put("count", this.vehiculeRepository.count());
+        }catch (Exception e){
+            response.put("status", "false");
+            response.put("error", e.getMessage());
+        }
+        return response;
     }
 
     @PostMapping
-    public void update(@RequestBody Vehicule vehicule) {
-        this.vehiculeRepository.save(vehicule);
+    public Map<String, Object> update(@RequestBody Vehicule vehicule) {
+        Map<String, Object> response = new LinkedHashMap<String, Object>();
+        try {
+            response.put("status", "true");
+            response.put("object", this.vehiculeRepository.save(vehicule));
+        }catch (Exception e){
+            response.put("status", "false");
+            response.put("error", e.getMessage());
+        }
+        return response;
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") String id) {
-        this.vehiculeRepository.delete(id);
+    public Map<String, Object> delete(@PathVariable("id") String id) {
+
+        Map<String, Object> response = new LinkedHashMap<String, Object>();
+        try {
+            response.put("status", "true");
+            this.vehiculeRepository.delete(id);
+            response.put("count", this.vehiculeRepository.count());
+        }catch (Exception e){
+            response.put("status", "false");
+            response.put("error", e.getMessage());
+        }
+        return response;
+
     }
 
 

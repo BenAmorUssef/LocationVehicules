@@ -20,6 +20,9 @@ public class Administrateur
     @DBRef
     private List<Reservation> reservations;
 
+    public Administrateur() {
+    }
+
     public Administrateur(int codeAdmin, String nomAdmin, String addressAdmin, String mailAdmin, String typeAdmin, Compte codeCompte, List<Reservation> reservations) {
         this.codeAdmin = codeAdmin;
         this.nomAdmin = nomAdmin;
