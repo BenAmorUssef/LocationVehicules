@@ -2,9 +2,12 @@ package com.example.demo.controller;
 
 
 import com.example.demo.model.Administrateur;
+import com.example.demo.model.Compte;
 import com.example.demo.repository.AdminRepository;
+import com.example.demo.repository.CompteRepository;
 import com.example.demo.service.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -20,6 +23,8 @@ public class AdminController {
     private AdminRepository administrateurRepository;
     @Autowired
     private CounterService counterScervice;
+    @Autowired
+    private CompteRepository compteRepository;
 
     public AdminController(AdminRepository adminRepository) {
         super();
@@ -72,6 +77,22 @@ public class AdminController {
         }catch (Exception e){
             response.put("status", "false");
             response.put("error", e.getMessage());
+        }
+        return response;
+    }
+    @CrossOrigin
+    @PostMapping("/login")
+    public Map<String, Object> login(@Param("login") String login, @Param("passsword") String password) {
+        Map<String, Object> response = new LinkedHashMap<String, Object>();
+
+        Compte compte = this.compteRepository.findByLoginAndMotDePasse(login, password);
+
+        if (compte != null){
+            response.put("success", "true");
+            Administrateur admin = this.administrateurRepository.findByCodeCompte(compte);
+            response.put("object", admin);
+        }else{
+            response.put("success", "false");
         }
         return response;
     }

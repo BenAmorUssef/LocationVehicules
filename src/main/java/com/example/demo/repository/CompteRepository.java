@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompteRepository extends MongoRepository<Compte, String> {
     public Compte findByCodeCompte(int code);
-
+    public Compte findByLoginAndMotDePasse(String login, String mdp);
 }
