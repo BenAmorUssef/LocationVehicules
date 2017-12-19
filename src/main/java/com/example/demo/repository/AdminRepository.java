@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface AdminRepository extends MongoRepository<Administrateur, String> {
-
+    public Administrateur findByCodeAdmin(int code);
 }

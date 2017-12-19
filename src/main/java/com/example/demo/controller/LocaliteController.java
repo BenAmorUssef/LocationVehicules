@@ -35,7 +35,7 @@ public class LocaliteController {
     @CrossOrigin
     @GetMapping("/{id}")
     public Localite getWithId(@PathVariable("id") int id){
-        Localite localite= this.localiteRepository.findOne(id+"");
+        Localite localite= this.localiteRepository.findByCodeLocal(id);
         return localite;
     }
 
@@ -71,11 +71,11 @@ public class LocaliteController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable("id") String id) {
+    public Map<String, Object> delete(@PathVariable("id") int id) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.localiteRepository.delete(id);
+            this.localiteRepository.delete(this.localiteRepository.findByCodeLocal(id));
             response.put("count", this.localiteRepository.count());
         }catch (Exception e){
             response.put("status", "false");

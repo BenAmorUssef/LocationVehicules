@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class ReseravtionController {
     @CrossOrigin
     @GetMapping("/{id}")
     public Reservation getWithId(@PathVariable("id") int id){
-        Reservation reservation = this.reservationRepository.findOne(id+"");
+        Reservation reservation = this.reservationRepository.findByCodeRes(id);
         return reservation;
     }
     @GetMapping("all/client/{id}")
@@ -61,19 +63,21 @@ public class ReseravtionController {
     @GetMapping("/max")
     public List<Client> getAllbvss(){
 
-        GroupOperation sumClient = group("client")
-                .sum("_id").as("numClt");
-        SortOperation sortSumClient = sort(new Sort(Sort.Direction.DESC, "numClt"));
-        LimitOperation limitToOnlyFirstDoc = limit(5);
-
-
+        GroupOperation group = group("client").sum("clients").as("count");
+        SortOperation sort = sort(new Sort(Sort.Direction.DESC, "statePop"));
+        LimitOperation limit = limit(5);
         Aggregation aggregation = newAggregation(
-                sumClient, sortSumClient,
-                limitToOnlyFirstDoc);
+                group, sort, limit);
 
-        AggregationResults<Client> result = mongoTemplate
-                .aggregate(aggregation, "sum", Client.class);
-        List<Client> clients = result.getMappedResults();
+
+
+        AggregationResults<Reservation> result = mongoTemplate
+                .aggregate(aggregation, "sum", Reservation.class);
+        List<Reservation> ress = result.getMappedResults();
+        List<Client> clients = new ArrayList<>();
+        for (int i = 0; i < ress.size(); i++) {
+            clients.add(ress.get(i).getClient());
+        }
         return clients;
     }
 
@@ -115,11 +119,11 @@ public class ReseravtionController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable("id") String id) {
+    public Map<String, Object> delete(@PathVariable("id") int id) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.reservationRepository.delete(id);
+            this.reservationRepository.delete(this.reservationRepository.findByCodeRes(id));
             response.put("count", this.reservationRepository.count());
         }catch (Exception e){
             response.put("status", "false");

@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CountersRepository extends MongoRepository<Counter, String> {
+    public Counter findById(String code);
 
 }

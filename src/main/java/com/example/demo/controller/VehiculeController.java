@@ -34,7 +34,7 @@ public class VehiculeController {
     @CrossOrigin
     @GetMapping("/{id}")
     public Vehicule getWithId(@PathVariable("id") int id){
-        Vehicule vehicule = this.vehiculeRepository.findOne(id+"");
+        Vehicule vehicule = this.vehiculeRepository.findByMatricule(id+"");
         return vehicule;
     }
 
@@ -90,7 +90,7 @@ public class VehiculeController {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.vehiculeRepository.delete(id);
+            this.vehiculeRepository.delete(this.vehiculeRepository.findByMatricule(id));
             response.put("count", this.vehiculeRepository.count());
         }catch (Exception e){
             response.put("status", "false");

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends MongoRepository<Reservation, String> {
-
+    public Reservation findByCodeRes(int code);
     List<Reservation> findAllByClient_CodeClient(int client);
     List<Reservation> findAllByVehicule_Matricule(String code);
     List<Reservation> findAllByOrderByVehicule(String code);

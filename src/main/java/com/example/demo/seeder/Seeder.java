@@ -23,6 +23,7 @@ public class Seeder implements CommandLineRunner{
     private VehiculeRepository vehiculeRepository;
     private TypeVehiculeRepository typeVehiculeRepository;
     private CountersRepository countersRepository;
+    private ContactRepository contactRepository;
 
     public Seeder(
             AdminRepository adminRepository,
@@ -30,6 +31,7 @@ public class Seeder implements CommandLineRunner{
             CompteRepository compteRepository,
             LocaliteRepository localiteRepository,
             ReservationRepository reservationRepository,
+            ContactRepository contactRepository,
             VehiculeRepository vehiculeRepository,
             TypeVehiculeRepository typeVehiculeRepository, CountersRepository countersRepository) {
         this.adminRepository = adminRepository;
@@ -38,6 +40,7 @@ public class Seeder implements CommandLineRunner{
         this.localiteRepository = localiteRepository;
         this.reservationRepository = reservationRepository;
         this.vehiculeRepository = vehiculeRepository;
+        this.contactRepository = contactRepository;
         this.typeVehiculeRepository = typeVehiculeRepository;
         this.countersRepository = countersRepository;
     }
@@ -98,6 +101,7 @@ public class Seeder implements CommandLineRunner{
         Counter cLocalite = new Counter("localite", 3);
         Counter cReservation = new Counter("reservation", 9);
         Counter cType = new Counter("type", 0);
+        Counter cContact = new Counter("contact", 0);
         Counter cVehiculle = new Counter("vehicule", 4);
         Counter cCompte = new Counter("compte", 4);
 
@@ -107,13 +111,15 @@ public class Seeder implements CommandLineRunner{
         this.localiteRepository.deleteAll();
         this.vehiculeRepository.deleteAll();
         this.typeVehiculeRepository.deleteAll();
+        this.contactRepository.deleteAll();
         this.reservationRepository.deleteAll();
         this.countersRepository.deleteAll();
 
-        this.countersRepository.save(Arrays.asList(cAdmin, cClient, cCompte, cLocalite, cReservation, cType, cVehiculle));
+        this.countersRepository.save(Arrays.asList(cAdmin, cClient, cCompte, cContact, cLocalite, cReservation, cType, cVehiculle));
         this.clientRepository.save(Arrays.asList(aliCl, salahCl, medCl, ahmedCl, mounaCl));
         this.compteRepository.save(Arrays.asList(aliC, medC, salahC, mounaC));
         this.localiteRepository.save(Arrays.asList(nabeul, ariana, sousse, sfax ));
+        this.contactRepository.save(new Contact(0, "", "", ""));
         this.typeVehiculeRepository.save(tv);
         this.vehiculeRepository.save(Arrays.asList(v1, v2, v3, v4, v5));
         this.reservationRepository.save(Arrays.asList(rev1, rev2, rev3, rev4, rev5, rev11, rev22, rev33, rev44, rev55));

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LocaliteRepository extends MongoRepository<Localite, String> {
+    public Localite findByCodeLocal(int code);
+
 }

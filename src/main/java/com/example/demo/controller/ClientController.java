@@ -35,7 +35,7 @@ public class ClientController {
     @CrossOrigin
     @GetMapping("/{id}")
     public Client getWithId(@PathVariable("id") int id){
-        Client client= this.clientRepository.findOne(id+"");
+        Client client= this.clientRepository.findByCodeClient(id);
         return client;
     }
     @CrossOrigin
@@ -76,11 +76,11 @@ public class ClientController {
 
     @CrossOrigin
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable("id") String id) {
+    public Map<String, Object> delete(@PathVariable("id") int id) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.clientRepository.delete(id);
+            this.clientRepository.delete(this.clientRepository.findByCodeClient(id));
             response.put("count", this.clientRepository.count());
         }catch (Exception e){
             response.put("status", "false");

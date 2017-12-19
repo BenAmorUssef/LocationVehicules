@@ -36,7 +36,7 @@ public class AdminController {
     @CrossOrigin
     @GetMapping("/{id}")
     public Administrateur getWithId(@PathVariable("id") int id){
-        Administrateur admin= this.administrateurRepository.findOne(id+"");
+        Administrateur admin= this.administrateurRepository.findByCodeAdmin(id);
         return admin;
     }
 
@@ -78,11 +78,11 @@ public class AdminController {
 
     @CrossOrigin
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable("id") String id) {
+    public Map<String, Object> delete(@PathVariable("id") int id) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.administrateurRepository.delete(id);
+            this.administrateurRepository.delete(this.administrateurRepository.findByCodeAdmin(id));
             response.put("count", this.administrateurRepository.count());
         }catch (Exception e){
             response.put("status", "false");

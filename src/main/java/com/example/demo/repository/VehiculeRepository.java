@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface VehiculeRepository extends MongoRepository<Vehicule, String> {
+    public Vehicule findByMatricule(String code);
     List<Vehicule> findAllByLocalite_CodeLocal(int code);
     List<Vehicule> findAllByTypeVehicule_CodeType(int code);
 }

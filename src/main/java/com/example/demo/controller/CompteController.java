@@ -34,7 +34,7 @@ public class CompteController {
     @CrossOrigin
     @GetMapping("/{id}")
     public Compte getWithId(@PathVariable("id") int id){
-        Compte compte= this.compteRepository.findOne(id+"");
+        Compte compte= this.compteRepository.findByCodeCompte(id);
         return compte;
     }
     @PutMapping
@@ -69,11 +69,11 @@ public class CompteController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable("id") String id) {
+    public Map<String, Object> delete(@PathVariable("id") int id) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.compteRepository.delete(id);
+            this.compteRepository.delete(this.compteRepository.findByCodeCompte(id));
             response.put("count", this.compteRepository.count());
         }catch (Exception e){
             response.put("status", "false");

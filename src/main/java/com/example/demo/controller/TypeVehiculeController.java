@@ -34,7 +34,7 @@ public class TypeVehiculeController {
     @CrossOrigin
     @GetMapping("/{id}")
     public TypeVehicule getWithId(@PathVariable("id") int id){
-        TypeVehicule typeVehicule = this.typeVehiculeRepository.findOne(id+"");
+        TypeVehicule typeVehicule = this.typeVehiculeRepository.findByCodeType(id);
         return typeVehicule;
     }
     @PutMapping
@@ -69,11 +69,11 @@ public class TypeVehiculeController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable("id") String id) {
+    public Map<String, Object> delete(@PathVariable("id") int id) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");
-            this.typeVehiculeRepository.delete(id);
+            this.typeVehiculeRepository.delete(this.typeVehiculeRepository.findByCodeType(id));
             response.put("count", this.typeVehiculeRepository.count());
         }catch (Exception e){
             response.put("status", "false");
