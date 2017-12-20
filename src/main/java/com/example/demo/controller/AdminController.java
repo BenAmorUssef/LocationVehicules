@@ -69,7 +69,7 @@ public class AdminController {
     }
     @CrossOrigin
     @PostMapping("/{id}")
-    public Map<String, Object> update(@PathVariable("/{id}") int id, @RequestBody Administrateur admnistrateur) {
+    public Map<String, Object> update(@PathVariable("id") int id, @RequestBody Administrateur admnistrateur) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
         try {
             response.put("status", "true");

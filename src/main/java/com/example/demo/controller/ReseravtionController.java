@@ -5,10 +5,16 @@ import com.example.demo.model.Client;
 import com.example.demo.model.Reservation;
 import com.example.demo.repository.ReservationRepository;
 import com.example.demo.service.CounterService;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.client.model.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.util.CloseableIterator;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mongodb.AggregationOptions.OutputMode.CURSOR;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 
@@ -60,24 +68,35 @@ public class ReseravtionController {
 
 
     @GetMapping("/max")
-    public List<Client> getAllbvss(){
-
-        GroupOperation group = group("client").sum("clients").as("count");
-        SortOperation sort = sort(new Sort(Sort.Direction.DESC, "statePop"));
-        LimitOperation limit = limit(5);
-        Aggregation aggregation = newAggregation(
-                group, sort, limit);
+    public List<Client> getAllbvss() {
+        List<Client> clients = null;
+        try {
 
 
+            AggregationOptions options = new AggregationOptions.Builder().cursor(new BasicDBObject()).build();
 
-        AggregationResults<Reservation> result = mongoTemplate
-                .aggregate(aggregation, "sum", Reservation.class);
-        List<Reservation> ress = result.getMappedResults();
-        List<Client> clients = new ArrayList<>();
-        for (int i = 0; i < ress.size(); i++) {
-            clients.add(ress.get(i).getClient());
+            Aggregation aggregation = newAggregation(
+                    project("client"),
+                    unwind("client"),
+                    group("client")
+                            .count().as("count")
+            ).withOptions(options);
+
+            AggregationResults<Reservation> results = mongoTemplate.aggregate(aggregation, "reservation", Reservation.class);
+
+
+            List<Reservation> ress = results.getMappedResults();
+
+            clients = new ArrayList<>();
+            for (int i = 0; i < ress.size(); i++) {
+                clients.add(ress.get(i).getClient());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return clients;
+
     }
 
     @PutMapping
